@@ -20,9 +20,11 @@ const ConnectWalletButton: React.FC = () => {
   const location = useLocation();
   
   useEffect(() => {
-    // Navigate to onboarding when user connects their wallet
-    // But only if they're not already on the onboarding page
-    if (isConnected && !location.pathname.includes('/onboarding')) {
+    // Only navigate to onboarding when user connects their wallet
+    // and hasn't completed onboarding yet
+    const hasCompletedOnboarding = localStorage.getItem('onboardingCompleted') === 'true';
+    
+    if (isConnected && !location.pathname.includes('/onboarding') && !hasCompletedOnboarding) {
       // Use a stronger approach to navigation
       const timer = setTimeout(() => {
         console.log('Navigating to onboarding from ConnectWalletButton');

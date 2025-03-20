@@ -17,7 +17,14 @@ import Marketplace from "./pages/Marketplace";
 import Stake from "./pages/Stake";
 import Onboarding from "./pages/Onboarding";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1
+    },
+  },
+});
 
 const App = () => (
   <WagmiConfig config={wagmiConfig}>

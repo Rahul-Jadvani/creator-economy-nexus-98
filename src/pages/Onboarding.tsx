@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAccount } from 'wagmi';
@@ -26,6 +25,7 @@ const Onboarding: React.FC = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [followedCreators, setFollowedCreators] = useState<string[]>([]);
   const [tutorialComplete, setTutorialComplete] = useState(false);
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
   const navigate = useNavigate();
   const { isConnected } = useAccount();
 
@@ -35,6 +35,22 @@ const Onboarding: React.FC = () => {
       setCurrentStep(1);
     }
   }, [isConnected, currentStep]);
+
+  // This effect handles navigation after onboarding is completed
+  useEffect(() => {
+    if (onboardingComplete) {
+      // Store onboarding completion status in localStorage
+      localStorage.setItem('onboardingCompleted', 'true');
+      
+      // Wait for toast to show before redirecting
+      const timer = setTimeout(() => {
+        console.log('Navigating to home after onboarding completion');
+        navigate('/', { state: { onboardingCompleted: true }, replace: true });
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [onboardingComplete, navigate]);
 
   const handleWalletConnected = (address: string) => {
     toast.success('Wallet connected successfully!');
@@ -63,13 +79,7 @@ const Onboarding: React.FC = () => {
 
   const handleOnboardingComplete = () => {
     toast.success('Onboarding complete! Welcome to VYB-R8R!');
-    
-    // Force navigation to home page with a longer delay to ensure toast is shown
-    // and state updates are properly processed
-    setTimeout(() => {
-      // Use a direct window location change as a fallback if navigate doesn't work
-      window.location.href = '/';
-    }, 800);
+    setOnboardingComplete(true);
   };
 
   const goToNextStep = () => {
@@ -90,13 +100,12 @@ const Onboarding: React.FC = () => {
 
   // If user somehow returns to onboarding after completing it, redirect to home
   useEffect(() => {
-    if (isConnected && currentStep === 4 && tutorialComplete) {
-      const timer = setTimeout(() => {
-        navigate('/', { replace: true });
-      }, 300);
-      return () => clearTimeout(timer);
+    const hasCompletedOnboarding = localStorage.getItem('onboardingCompleted') === 'true';
+    if (hasCompletedOnboarding) {
+      console.log('User already completed onboarding, redirecting to home');
+      navigate('/', { replace: true });
     }
-  }, [isConnected, currentStep, tutorialComplete, navigate]);
+  }, [navigate]);
 
   return (
     <Layout>
@@ -224,3 +233,4 @@ const Onboarding: React.FC = () => {
 };
 
 export default Onboarding;
+

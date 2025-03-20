@@ -20,7 +20,7 @@ const WalletConnectSection: React.FC<WalletConnectSectionProps> = ({ onWalletCon
       // Use a small delay to ensure wallet state is properly updated
       const timer = setTimeout(() => {
         onWalletConnected(address);
-      }, 200);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [isConnected, address, onWalletConnected]);

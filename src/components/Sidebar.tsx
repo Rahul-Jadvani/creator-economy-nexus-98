@@ -21,7 +21,14 @@ const Sidebar: React.FC = () => {
   const handleNavigation = (path: string) => {
     // Use window.location.href as a fallback if navigate doesn't work
     console.log('Navigating to:', path);
-    navigate(path);
+    try {
+      // Force navigation with window.location if needed for reliability
+      window.location.href = path;
+    } catch (error) {
+      console.error('Navigation error:', error);
+      // Last resort fallback
+      window.location.href = path;
+    }
   };
   
   return (

@@ -68,26 +68,27 @@ const Index: React.FC = () => {
   const location = useLocation();
   const { isConnected } = useAccount();
   
-  // Check if user is new (would be determined by authentication in a real app)
-  const isNewUser = !location.state?.onboardingCompleted;
+  // Check onboarding status from both localStorage and location state
+  const hasCompletedOnboarding = 
+    localStorage.getItem('onboardingCompleted') === 'true' || 
+    !!location.state?.onboardingCompleted;
+  
+  // Initialize showWelcomeBanner based on onboarding status
+  useEffect(() => {
+    if (hasCompletedOnboarding) {
+      setShowWelcomeBanner(false);
+    }
+  }, [hasCompletedOnboarding]);
   
   const handleStartOnboarding = () => {
     console.log('Navigating to onboarding from Index');
     navigate('/onboarding', { replace: true });
   };
-
-  // When a user arrives at home after completing onboarding,
-  // mark that they've completed it to not show the banner again
-  useEffect(() => {
-    if (location.state?.onboardingCompleted) {
-      setShowWelcomeBanner(false);
-    }
-  }, [location.state]);
   
   return (
     <Layout>
       <div className="pt-4">
-        {isNewUser && showWelcomeBanner && (
+        {!hasCompletedOnboarding && showWelcomeBanner && (
           <div className="glass-card mb-6 p-4 border border-blue-500/20 relative">
             <button 
               className="absolute top-3 right-3 text-gray-400 hover:text-white"
