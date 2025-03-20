@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import Tickets from "./pages/Tickets";
 import Marketplace from "./pages/Marketplace";
 import Stake from "./pages/Stake";
+import Onboarding from "./pages/Onboarding";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/tickets" element={<Tickets />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/stake" element={<Stake />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

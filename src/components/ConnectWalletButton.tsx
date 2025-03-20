@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,7 @@ const ConnectWalletButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
+  const navigate = useNavigate();
   
   const connectWallet = async (walletType: string) => {
     try {
@@ -25,6 +27,9 @@ const ConnectWalletButton: React.FC = () => {
       
       // Show success message
       console.log(`Connected to ${walletType} wallet: ${mockAddress}`);
+      
+      // Navigate to onboarding
+      navigate('/onboarding');
     } catch (error) {
       console.error("Error connecting wallet:", error);
     }

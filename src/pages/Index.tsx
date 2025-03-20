@@ -1,8 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import PostCard, { PostData } from '@/components/PostCard';
 import CreatePostForm from '@/components/CreatePostForm';
+import { Button } from '@/components/ui/button';
+import { Gift, Trophy, ArrowRight, X } from 'lucide-react';
 
 const mockedPosts: PostData[] = [
   {
@@ -59,9 +62,65 @@ const mockedPosts: PostData[] = [
 ];
 
 const Index: React.FC = () => {
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
+  const navigate = useNavigate();
+  
+  // Check if user is new (would be determined by authentication in a real app)
+  const isNewUser = true;
+  
+  const handleStartOnboarding = () => {
+    navigate('/onboarding');
+  };
+  
   return (
     <Layout>
       <div className="pt-4">
+        {isNewUser && showWelcomeBanner && (
+          <div className="glass-card mb-6 p-4 border border-blue-500/20 relative">
+            <button 
+              className="absolute top-3 right-3 text-gray-400 hover:text-white"
+              onClick={() => setShowWelcomeBanner(false)}
+            >
+              <X className="h-5 w-5" />
+            </button>
+            
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="mb-4 md:mb-0 md:mr-6">
+                <Trophy className="h-16 w-16 text-yellow-400" />
+              </div>
+              
+              <div className="flex-1">
+                <h2 className="text-xl font-orbitron font-bold mb-2">Welcome to VYB-R8R!</h2>
+                <p className="text-gray-300 mb-4">
+                  Get started by completing the onboarding process to earn your first rewards and learn how to use the platform.
+                </p>
+                
+                <div className="flex flex-wrap gap-3 mb-4">
+                  <div className="bg-white/10 py-1 px-3 rounded-full flex items-center text-sm">
+                    <Gift className="h-4 w-4 mr-1 text-green-400" />
+                    <span>50 VYB Welcome Bonus</span>
+                  </div>
+                  <div className="bg-white/10 py-1 px-3 rounded-full flex items-center text-sm">
+                    <Gift className="h-4 w-4 mr-1 text-green-400" />
+                    <span>Soulbound Identity NFT</span>
+                  </div>
+                  <div className="bg-white/10 py-1 px-3 rounded-full flex items-center text-sm">
+                    <Gift className="h-4 w-4 mr-1 text-green-400" />
+                    <span>Exclusive Creator Access</span>
+                  </div>
+                </div>
+                
+                <Button 
+                  onClick={handleStartOnboarding}
+                  className="bg-white text-black hover:bg-white/90"
+                >
+                  Start Onboarding <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <CreatePostForm />
         
         {mockedPosts.map((post) => (

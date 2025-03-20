@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import PostCard, { PostData } from '@/components/PostCard';
 import TokenStatsCard from '@/components/TokenStatsCard';
+import MissionTracker from '@/components/MissionTracker';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Edit, Settings, Users, FileText, Sparkles, Lock, Share2 } from 'lucide-react';
+import { Edit, Settings, Users, FileText, Sparkles, Lock, Share2, Trophy } from 'lucide-react';
 
 const userProfile = {
   name: 'Alex Rivera',
@@ -108,7 +108,6 @@ const Profile: React.FC = () => {
   return (
     <Layout>
       <div className="pb-4">
-        {/* Banner and Profile */}
         <div className="relative mb-20">
           <div className="h-48 w-full overflow-hidden rounded-t-xl">
             <img
@@ -148,7 +147,6 @@ const Profile: React.FC = () => {
           </div>
         </div>
         
-        {/* Profile Info */}
         <div className="glass-card p-4 mb-6">
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div className="text-center">
@@ -185,12 +183,12 @@ const Profile: React.FC = () => {
           </div>
         </div>
         
-        {/* Token Stats */}
+        <MissionTracker />
+        
         <div className="mb-6">
           <TokenStatsCard {...tokenData} />
         </div>
         
-        {/* Content Tabs */}
         <Tabs defaultValue="posts">
           <TabsList className="glass w-full justify-start p-1">
             <TabsTrigger value="posts" className="flex items-center gap-1">
@@ -208,6 +206,10 @@ const Profile: React.FC = () => {
             <TabsTrigger value="exclusive" className="flex items-center gap-1">
               <Lock className="h-4 w-4" />
               <span>Exclusive</span>
+            </TabsTrigger>
+            <TabsTrigger value="poaps" className="flex items-center gap-1">
+              <Trophy className="h-4 w-4" />
+              <span>POAPs</span>
             </TabsTrigger>
           </TabsList>
           
@@ -264,6 +266,49 @@ const Profile: React.FC = () => {
               <Button className="bg-white text-black hover:bg-white/90">
                 Buy $ALEX Tokens
               </Button>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="poaps" className="mt-4">
+            <div className="glass-card p-4 mb-4">
+              <h3 className="font-orbitron font-bold mb-3">Proof of Attendance (POAPs)</h3>
+              <p className="text-sm text-gray-400 mb-4">
+                Collect POAPs by attending events and engaging with VYB-R8R
+              </p>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div className="glass p-3 rounded-xl overflow-hidden hover-scale text-center">
+                  <div className="aspect-square rounded-lg overflow-hidden mb-2 bg-purple-500/20 flex items-center justify-center">
+                    <Trophy className="h-12 w-12 text-purple-400" />
+                  </div>
+                  <p className="text-sm font-medium">Early Adopter</p>
+                  <p className="text-xs text-gray-400">May 2023</p>
+                </div>
+                
+                <div className="glass p-3 rounded-xl overflow-hidden hover-scale text-center">
+                  <div className="aspect-square rounded-lg overflow-hidden mb-2 bg-green-500/20 flex items-center justify-center">
+                    <Trophy className="h-12 w-12 text-green-400" />
+                  </div>
+                  <p className="text-sm font-medium">VYB Launch Event</p>
+                  <p className="text-xs text-gray-400">June 2023</p>
+                </div>
+                
+                <div className="glass p-3 rounded-xl overflow-hidden hover-scale text-center opacity-50">
+                  <div className="aspect-square rounded-lg overflow-hidden mb-2 bg-gray-500/20 flex items-center justify-center">
+                    <Lock className="h-12 w-12 text-gray-400" />
+                  </div>
+                  <p className="text-sm font-medium">Creator Summit</p>
+                  <p className="text-xs text-gray-400">Not Collected</p>
+                </div>
+                
+                <div className="glass p-3 rounded-xl overflow-hidden hover-scale text-center opacity-50">
+                  <div className="aspect-square rounded-lg overflow-hidden mb-2 bg-gray-500/20 flex items-center justify-center">
+                    <Lock className="h-12 w-12 text-gray-400" />
+                  </div>
+                  <p className="text-sm font-medium">Staking Reward</p>
+                  <p className="text-xs text-gray-400">Not Collected</p>
+                </div>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
