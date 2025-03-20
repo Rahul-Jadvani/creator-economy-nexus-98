@@ -1,7 +1,12 @@
+
 import React, { useState } from 'react';
-import { Heart, MessageCircle, Share2, Repeat2, MoreHorizontal } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Repeat2, MoreHorizontal, Lock } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { postService } from '@/services/api';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 export interface PostData {
   id: string;
@@ -29,14 +34,42 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [reposted, setReposted] = useState(post.isReposted || false);
   const [likeCount, setLikeCount] = useState(post.likes);
   const [repostCount, setRepostCount] = useState(post.reposts);
+  const [isLiking, setIsLiking] = useState(false);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   
-  const handleLike = () => {
-    if (liked) {
-      setLikeCount(likeCount - 1);
-    } else {
-      setLikeCount(likeCount + 1);
+  const handleLike = async () => {
+    if (isLiking) return;
+    
+    setIsLiking(true);
+    
+    try {
+      if (liked) {
+        // Unlike post
+        const { error } = await postService.unlikePost(post.id);
+        if (error) throw new Error(error);
+        
+        setLikeCount(likeCount - 1);
+        setLiked(false);
+      } else {
+        // Like post
+        const { error } = await postService.likePost(post.id);
+        if (error) throw new Error(error);
+        
+        setLikeCount(likeCount + 1);
+        setLiked(true);
+      }
+      
+      // Invalidate feed query to refresh posts
+      queryClient.invalidateQueries({ queryKey: ['feed'] });
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      // Revert UI changes on error
+      setLiked(!liked);
+      setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+    } finally {
+      setIsLiking(false);
     }
-    setLiked(!liked);
   };
   
   const handleRepost = () => {
@@ -46,6 +79,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       setRepostCount(repostCount + 1);
     }
     setReposted(!reposted);
+    toast.success(!reposted ? 'Post reposted!' : 'Repost removed');
+  };
+  
+  const navigateToProfile = () => {
+    navigate(`/profile/${post.handle}`);
   };
 
   return (
@@ -53,7 +91,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <div className="p-4">
         {/* Post Header */}
         <div className="flex justify-between mb-3">
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer" onClick={navigateToProfile}>
             <Avatar className="h-10 w-10 mr-3 border border-white/20">
               <img src={post.avatar || '/placeholder.svg'} alt={post.username} />
             </Avatar>
@@ -61,6 +99,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               <div className="flex items-center">
                 <p className="font-medium">{post.username}</p>
                 <p className="text-gray-400 text-sm ml-1">@{post.handle}</p>
+                {post.isTokenGated && (
+                  <div className="ml-2">
+                    <Lock className="h-3 w-3 text-blue-400" />
+                  </div>
+                )}
               </div>
               <p className="text-gray-400 text-xs">{post.time}</p>
             </div>
@@ -89,8 +132,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         {/* Post Actions */}
         <div className="flex justify-between mt-4 pt-2 border-t border-white/5">
           <button 
-            className={`flex items-center text-sm hover:text-glow transition-all ${liked ? 'text-pink-500' : 'text-gray-400'}`}
+            className={`flex items-center text-sm hover:text-glow transition-all ${liked ? 'text-pink-500' : 'text-gray-400'} ${isLiking ? 'opacity-50' : ''}`}
             onClick={handleLike}
+            disabled={isLiking}
           >
             <Heart className={`h-4 w-4 mr-1 ${liked ? 'fill-pink-500' : ''}`} />
             <span>{likeCount > 0 ? likeCount : ''}</span>

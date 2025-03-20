@@ -1,3 +1,4 @@
+
 import { toast } from 'sonner';
 
 const API_URL = 'http://localhost:5000/api';
@@ -23,12 +24,12 @@ export const apiClient = {
     localStorage.removeItem('authToken');
   },
   
-  async get<T>(endpoint: string, params = {}): Promise<ApiResponse<T>> {
+  async get<T>(endpoint: string, params: Record<string, any> = {}): Promise<ApiResponse<T>> {
     try {
       const url = new URL(`${API_URL}${endpoint}`);
       
-      Object.keys(params).forEach(key => {
-        const value = params[key as keyof typeof params];
+      // Add query parameters
+      Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           url.searchParams.append(key, String(value));
         }
@@ -44,7 +45,8 @@ export const apiClient = {
       
       const response = await fetch(url.toString(), {
         method: 'GET',
-        headers
+        headers,
+        credentials: 'same-origin'
       });
       
       if (!response.ok) {
@@ -60,12 +62,17 @@ export const apiClient = {
       if (error instanceof Error) {
         errorMessage = error.message;
       }
-      toast.error(errorMessage);
+      
+      // Only show toast for non-connection errors
+      if (!(error instanceof TypeError && error.message === 'Failed to fetch')) {
+        toast.error(errorMessage);
+      }
+      
       return { data: null, error: errorMessage };
     }
   },
   
-  async post<T>(endpoint: string, data = {}): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, data: Record<string, any> = {}): Promise<ApiResponse<T>> {
     try {
       const headers: HeadersInit = {
         'Content-Type': 'application/json'
@@ -78,7 +85,8 @@ export const apiClient = {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'same-origin'
       });
       
       if (!response.ok) {
@@ -94,12 +102,17 @@ export const apiClient = {
       if (error instanceof Error) {
         errorMessage = error.message;
       }
-      toast.error(errorMessage);
+      
+      // Only show toast for non-connection errors
+      if (!(error instanceof TypeError && error.message === 'Failed to fetch')) {
+        toast.error(errorMessage);
+      }
+      
       return { data: null, error: errorMessage };
     }
   },
   
-  async put<T>(endpoint: string, data = {}): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, data: Record<string, any> = {}): Promise<ApiResponse<T>> {
     try {
       const headers: HeadersInit = {
         'Content-Type': 'application/json'
@@ -112,7 +125,8 @@ export const apiClient = {
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'PUT',
         headers,
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'same-origin'
       });
       
       if (!response.ok) {
@@ -128,7 +142,12 @@ export const apiClient = {
       if (error instanceof Error) {
         errorMessage = error.message;
       }
-      toast.error(errorMessage);
+      
+      // Only show toast for non-connection errors
+      if (!(error instanceof TypeError && error.message === 'Failed to fetch')) {
+        toast.error(errorMessage);
+      }
+      
       return { data: null, error: errorMessage };
     }
   },
@@ -145,7 +164,8 @@ export const apiClient = {
       
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'DELETE',
-        headers
+        headers,
+        credentials: 'same-origin'
       });
       
       if (!response.ok) {
@@ -161,7 +181,12 @@ export const apiClient = {
       if (error instanceof Error) {
         errorMessage = error.message;
       }
-      toast.error(errorMessage);
+      
+      // Only show toast for non-connection errors
+      if (!(error instanceof TypeError && error.message === 'Failed to fetch')) {
+        toast.error(errorMessage);
+      }
+      
       return { data: null, error: errorMessage };
     }
   }

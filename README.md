@@ -1,69 +1,152 @@
-# Welcome to your Lovable project
 
-## Project info
+# VYB-R8R: Web3 Social Platform
 
-**URL**: https://lovable.dev/projects/0b4cf535-6fa6-49e3-adb9-980caf8ff7cc
+VYB-R8R is a full-stack web3 social platform that allows users to connect, share content, and engage with creators through various features including social posts, creator tokens, ticketing, staking, and more.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Web3 Wallet Integration
+- Social Feed with Posts and Comments
+- Creator Tokens
+- NFT Showcase
+- Event Tickets
+- Token Staking
+- Raffles and Giveaways
+- Interest-based Content
+- Token-gated Exclusive Content
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0b4cf535-6fa6-49e3-adb9-980caf8ff7cc) and start prompting.
+- **Frontend**:
+  - React (Vite)
+  - TypeScript
+  - Tailwind CSS
+  - TanStack Query (React Query)
+  - Zustand for State Management
+  - Rainbow Kit for Wallet Connection
+  - ShadCN UI Components
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Backend**:
+  - Node.js
+  - Express
+  - Prisma ORM
+  - JSON Web Tokens (JWT)
+  - TypeScript
 
-**Use your preferred IDE**
+- **Database**:
+  - PostgreSQL (Neon)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
 
-Follow these steps:
+- Node.js (v16+)
+- npm or yarn
+- PostgreSQL database (or Neon account)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Installation
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/vyb-r8r.git
+   cd vyb-r8r
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+2. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+3. Install backend dependencies:
+   ```bash
+   cd src/backend
+   npm install
+   ```
+
+4. Set up the database:
+   ```bash
+   # From the backend directory
+   npx prisma migrate dev
+   npx prisma generate
+   ```
+
+5. Seed the database with sample data:
+   ```bash
+   npm run seed
+   ```
+
+### Running the Application
+
+1. Start the backend server:
+   ```bash
+   # From the backend directory
+   npm run dev
+   ```
+
+2. In a new terminal, start the frontend:
+   ```bash
+   # From the project root
+   npm run dev
+   ```
+
+3. Open your browser and navigate to `http://localhost:5173`
+
+## Deployment
+
+### Backend Deployment
+
+The backend can be deployed to various platforms:
+
+1. **Heroku**:
+   ```bash
+   # From the backend directory
+   heroku create
+   git subtree push --prefix src/backend heroku main
+   ```
+
+2. **Railway**:
+   - Connect your GitHub repository to Railway
+   - Set the root directory to `src/backend`
+   - Add environment variables
+
+3. **Digital Ocean App Platform**:
+   - Create a new app from your GitHub repository
+   - Set the root directory to `src/backend`
+   - Configure environment variables
+
+### Frontend Deployment
+
+The frontend can be deployed to:
+
+1. **Vercel**:
+   ```bash
+   npm run build
+   vercel deploy --prod
+   ```
+
+2. **Netlify**:
+   - Connect your GitHub repository
+   - Set build command: `npm run build`
+   - Set publish directory: `dist`
+
+## Environment Variables
+
+### Backend (.env)
+
+```
+DATABASE_URL=your_database_connection_string
+JWT_SECRET=your_jwt_secret
+PORT=5000
+NODE_ENV=production
+FRONTEND_URL=https://your-frontend-url.com
 ```
 
-**Edit a file directly in GitHub**
+### Frontend (.env)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+VITE_API_URL=https://your-backend-url.com/api
+```
 
-**Use GitHub Codespaces**
+## License
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/0b4cf535-6fa6-49e3-adb9-980caf8ff7cc) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+[MIT](LICENSE)
