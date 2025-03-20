@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Bell, Search } from 'lucide-react';
 import ConnectWalletButton from './ConnectWalletButton';
 import { Button } from '@/components/ui/button';
+import VybiumBalanceDisplay from './vybium/VybiumBalanceDisplay';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +18,7 @@ const Navbar: React.FC = () => {
     { name: 'Home', path: '/' },
     { name: 'Explore', path: '/explore' },
     { name: 'Create', path: '/create' },
+    { name: 'VYBium', path: '/vybium' },
     { name: 'Profile', path: '/profile' },
   ];
 
@@ -26,8 +28,8 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <h1 className="text-2xl font-bold tracking-widest animate-pulse">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#9b87f5] via-[#D946EF] to-[#F97316] font-orbitron">
+              <h1 className="text-2xl font-bold tracking-widest">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#9b87f5] via-[#D946EF] to-[#F97316] font-orbitron animate-pulse">
                   VYB<span className="opacity-50">-</span>R8R
                 </span>
               </h1>
@@ -51,6 +53,7 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
+            <VybiumBalanceDisplay />
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-white/10">
               <Search className="h-5 w-5" />
             </Button>
@@ -88,6 +91,7 @@ const Navbar: React.FC = () => {
             <div className="flex items-center justify-between py-2">
               <ConnectWalletButton />
               <div className="flex space-x-3">
+                <VybiumBalanceDisplay />
                 <Button variant="ghost" size="icon" className="rounded-full hover:bg-white/10">
                   <Search className="h-5 w-5" />
                 </Button>

@@ -16,6 +16,7 @@ import Tickets from "./pages/Tickets";
 import Marketplace from "./pages/Marketplace";
 import Stake from "./pages/Stake";
 import Onboarding from "./pages/Onboarding";
+import VybiumToken from "./pages/VybiumToken";
 import { useEffect } from "react";
 import useAuthStore from "./store/useAuthStore";
 
@@ -58,6 +59,7 @@ const App = () => {
                 <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/stake" element={<Stake />} />
                 <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/vybium" element={<VybiumToken />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
