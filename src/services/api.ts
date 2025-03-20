@@ -1,4 +1,3 @@
-
 import { toast } from 'sonner';
 
 const API_URL = 'http://localhost:5000/api';
@@ -27,9 +26,13 @@ export const apiClient = {
   async get<T>(endpoint: string, params = {}): Promise<ApiResponse<T>> {
     try {
       const url = new URL(`${API_URL}${endpoint}`);
-      Object.keys(params).forEach(key => 
-        url.searchParams.append(key, params[key as keyof typeof params].toString())
-      );
+      
+      Object.keys(params).forEach(key => {
+        const value = params[key as keyof typeof params];
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, String(value));
+        }
+      });
       
       const headers: HeadersInit = {
         'Content-Type': 'application/json'
@@ -335,6 +338,14 @@ export const raffleService = {
 export const interestService = {
   async getInterests() {
     return await apiClient.get<any[]>('/interests');
+  },
+  
+  async addUserInterests(userId: string, interestIds: string[]) {
+    return await apiClient.post<any>('/interests/user', { userId, interestIds });
+  },
+  
+  async getUserInterests(userId: string) {
+    return await apiClient.get<any[]>(`/interests/user/${userId}`);
   }
 };
 

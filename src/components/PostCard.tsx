@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Heart, MessageCircle, Share2, Repeat2, MoreHorizontal } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
@@ -18,6 +17,7 @@ export interface PostData {
   reposts: number;
   isLiked?: boolean;
   isReposted?: boolean;
+  isTokenGated?: boolean;
 }
 
 interface PostCardProps {
