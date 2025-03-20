@@ -21,7 +21,11 @@ const ConnectWalletButton: React.FC = () => {
   useEffect(() => {
     // Navigate to onboarding when user connects their wallet
     if (isConnected) {
-      navigate('/onboarding');
+      // Use a small delay to ensure wallet state is properly updated
+      const timer = setTimeout(() => {
+        navigate('/onboarding');
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [isConnected, navigate]);
   

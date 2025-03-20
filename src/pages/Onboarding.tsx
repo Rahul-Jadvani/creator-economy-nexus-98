@@ -63,8 +63,10 @@ const Onboarding: React.FC = () => {
 
   const handleOnboardingComplete = () => {
     toast.success('Onboarding complete! Welcome to VYB-R8R!');
-    // Navigate to home page
-    navigate('/');
+    // Navigate to home page with a small delay to allow toast to show
+    setTimeout(() => {
+      navigate('/');
+    }, 500);
   };
 
   const goToNextStep = () => {

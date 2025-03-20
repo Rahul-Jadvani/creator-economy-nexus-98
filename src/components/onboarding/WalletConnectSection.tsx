@@ -16,7 +16,11 @@ const WalletConnectSection: React.FC<WalletConnectSectionProps> = ({ onWalletCon
   // If wallet is already connected, trigger the callback
   useEffect(() => {
     if (isConnected && address) {
-      onWalletConnected(address);
+      // Use a small delay to ensure wallet state is properly updated
+      const timer = setTimeout(() => {
+        onWalletConnected(address);
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [isConnected, address, onWalletConnected]);
   

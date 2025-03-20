@@ -14,7 +14,7 @@ const { chains, publicClient } = configureChains(
 // Set up wallets
 const { connectors } = getDefaultWallets({
   appName: 'VYB-R8R',
-  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Replace with your WalletConnect Project ID
+  projectId: 'ef14b5f42b6e40399d3dddd625571057', // User's WalletConnect Project ID
   chains,
 });
 

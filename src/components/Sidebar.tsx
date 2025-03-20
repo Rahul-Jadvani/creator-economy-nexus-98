@@ -19,6 +19,7 @@ const Sidebar: React.FC = () => {
   ];
   
   const handleNavigation = (path: string) => {
+    // Use navigate directly instead of onClick handler
     navigate(path);
   };
   
