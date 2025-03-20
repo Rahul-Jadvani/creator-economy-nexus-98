@@ -1,8 +1,10 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
 import {
   Dialog,
   DialogContent,
@@ -13,53 +15,69 @@ import {
 
 const ConnectWalletButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState('');
+  const { address, isConnected } = useAccount();
   const navigate = useNavigate();
   
-  const connectWallet = async (walletType: string) => {
-    try {
-      // Mock connection - in a real app, you would use ethers.js or web3.js
-      const mockAddress = '0x' + Math.random().toString(16).substring(2, 14) + '...';
-      setWalletAddress(mockAddress);
-      setIsConnected(true);
-      setIsOpen(false);
-      
-      // Show success message
-      console.log(`Connected to ${walletType} wallet: ${mockAddress}`);
-      
-      // Navigate to onboarding
+  React.useEffect(() => {
+    // Navigate to onboarding when user connects their wallet
+    if (isConnected) {
       navigate('/onboarding');
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
     }
-  };
-  
-  const disconnectWallet = () => {
-    setIsConnected(false);
-    setWalletAddress('');
-  };
+  }, [isConnected, navigate]);
   
   return (
     <>
-      {isConnected ? (
-        <Button 
-          variant="outline" 
-          className="border-white/20 text-white font-medium flex items-center gap-2 hover:bg-white/10"
-          onClick={disconnectWallet}
-        >
-          <Wallet className="h-4 w-4" />
-          <span className="text-xs">{walletAddress}</span>
-        </Button>
-      ) : (
-        <Button 
-          variant="default" 
-          className="bg-white text-black hover:bg-white/90 text-xs font-medium"
-          onClick={() => setIsOpen(true)}
-        >
-          Connect Wallet
-        </Button>
-      )}
+      <ConnectButton.Custom>
+        {({
+          account,
+          chain,
+          openAccountModal,
+          openChainModal,
+          openConnectModal,
+          mounted,
+        }) => {
+          const ready = mounted;
+          const connected = ready && account && chain;
+
+          return (
+            <div
+              {...(!ready && {
+                'aria-hidden': true,
+                style: {
+                  opacity: 0,
+                  pointerEvents: 'none',
+                  userSelect: 'none',
+                },
+              })}
+            >
+              {(() => {
+                if (!connected) {
+                  return (
+                    <Button 
+                      variant="default" 
+                      className="bg-white text-black hover:bg-white/90 text-xs font-medium"
+                      onClick={openConnectModal}
+                    >
+                      Connect Wallet
+                    </Button>
+                  );
+                }
+
+                return (
+                  <Button 
+                    variant="outline" 
+                    className="border-white/20 text-white font-medium flex items-center gap-2 hover:bg-white/10"
+                    onClick={openAccountModal}
+                  >
+                    <Wallet className="h-4 w-4" />
+                    <span className="text-xs">{account.displayName}</span>
+                  </Button>
+                );
+              })()}
+            </div>
+          );
+        }}
+      </ConnectButton.Custom>
       
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="glass border-white/10 sm:max-w-md">
@@ -70,41 +88,14 @@ const ConnectWalletButton: React.FC = () => {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
-            <Button 
-              className="glass-button flex items-center justify-between py-6"
-              onClick={() => connectWallet('MetaMask')}
-            >
-              <span className="font-medium">MetaMask</span>
-              <span className="h-8 w-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
-                M
-              </span>
-            </Button>
-            
-            <Button 
-              className="glass-button flex items-center justify-between py-6"
-              onClick={() => connectWallet('WalletConnect')}
-            >
-              <span className="font-medium">WalletConnect</span>
-              <span className="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
-                W
-              </span>
-            </Button>
-            
-            <Button 
-              className="glass-button flex items-center justify-between py-6"
-              onClick={() => connectWallet('Coinbase')}
-            >
-              <span className="font-medium">Coinbase Wallet</span>
-              <span className="h-8 w-8 bg-blue-400 rounded-full flex items-center justify-center text-white">
-                C
-              </span>
-            </Button>
-          </div>
+          {/* We no longer need this part as Rainbow Kit handles the wallet connection options */}
         </DialogContent>
       </Dialog>
     </>
   );
 };
+
+// Add the missing import
+import { useState } from 'react';
 
 export default ConnectWalletButton;

@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Bell, Search, Wallet } from 'lucide-react';
+import { Menu, X, Bell, Search } from 'lucide-react';
 import ConnectWalletButton from './ConnectWalletButton';
 import { Button } from '@/components/ui/button';
 
@@ -24,7 +23,6 @@ const Navbar: React.FC = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
-          {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
               <h1 className="text-2xl font-bold text-white text-glow tracking-widest">
@@ -33,7 +31,6 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8 ml-8">
             {navLinks.map((link) => (
               <Link
@@ -50,7 +47,6 @@ const Navbar: React.FC = () => {
             ))}
           </div>
 
-          {/* Actions */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="ghost" size="icon" className="rounded-full hover:bg-white/10">
               <Search className="h-5 w-5" />
@@ -61,7 +57,6 @@ const Navbar: React.FC = () => {
             <ConnectWalletButton />
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <Button variant="ghost" size="icon" onClick={toggleMenu}>
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -70,7 +65,6 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden glass pt-2 pb-4 px-4 absolute w-full animate-fade-in">
           <div className="flex flex-col space-y-3">
