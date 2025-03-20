@@ -1,3 +1,4 @@
+
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
@@ -394,7 +395,7 @@ async function createEvents(users: any[]) {
   ];
   
   const eventDescriptions = [
-    'Join us for a developer-focused event where we'll discuss the latest trends in Web3 development.',
+    'Join us for a developer-focused event where we\'ll discuss the latest trends in Web3 development.',
     'A showcase of the most innovative NFT projects with live demonstrations from creators.',
     'Learn about the fundamentals of DeFi and how to participate in various protocols.',
     'Expert analysis of current market trends and predictions for the future of cryptocurrency.',

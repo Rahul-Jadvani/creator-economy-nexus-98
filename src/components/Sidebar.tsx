@@ -1,11 +1,10 @@
 
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Home, Compass, PlusCircle, User, TrendingUp, Ticket, LayoutGrid, Coins } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const navItems = [
     { icon: Home, label: 'Home', path: '/' },
@@ -18,19 +17,6 @@ const Sidebar: React.FC = () => {
     { icon: Coins, label: 'Stake', path: '/stake' },
   ];
   
-  const handleNavigation = (path: string) => {
-    // Use window.location.href as a fallback if navigate doesn't work
-    console.log('Navigating to:', path);
-    try {
-      // Force navigation with window.location if needed for reliability
-      window.location.href = path;
-    } catch (error) {
-      console.error('Navigation error:', error);
-      // Last resort fallback
-      window.location.href = path;
-    }
-  };
-  
   return (
     <div className="h-[calc(100vh-4rem)] overflow-y-auto glass-card py-4 px-2 m-2">
       <div className="px-3 mb-6">
@@ -38,9 +24,9 @@ const Sidebar: React.FC = () => {
       </div>
       <nav className="space-y-1 px-2">
         {navItems.map((item) => (
-          <div
+          <Link
             key={item.path}
-            onClick={() => handleNavigation(item.path)}
+            to={item.path}
             className={`flex items-center px-3 py-3 rounded-lg transition-all group cursor-pointer ${
               location.pathname === item.path
                 ? 'bg-white/10 text-white border-l-2 border-white'
@@ -49,24 +35,24 @@ const Sidebar: React.FC = () => {
           >
             <item.icon className={`h-5 w-5 mr-3 ${location.pathname === item.path ? 'text-white' : 'text-gray-400 group-hover:text-white'}`} />
             <span className="text-sm font-medium">{item.label}</span>
-          </div>
+          </Link>
         ))}
       </nav>
 
       <div className="mt-8 px-4">
         <div className="glass-card p-4 rounded-xl">
           <h3 className="font-orbitron text-sm text-white/90 mb-2">Your VYB Balance</h3>
-          <p className="text-2xl font-bold text-glow">0.0 VYB</p>
+          <p className="text-2xl font-bold text-glow">175.0 VYB</p>
           <div className="mt-3 flex justify-between text-xs text-gray-400">
-            <span>Staked: 0.0</span>
-            <span>Rewards: 0.0</span>
+            <span>Staked: 50.0</span>
+            <span>Rewards: 25.0</span>
           </div>
-          <button 
-            className="mt-4 w-full glass-button py-2 px-4 text-sm font-medium hover:bg-white/10 transition-all duration-200"
-            onClick={() => handleNavigation('/stake')}
+          <Link 
+            to="/stake"
+            className="mt-4 w-full glass-button py-2 px-4 text-sm font-medium hover:bg-white/10 transition-all duration-200 block text-center"
           >
             Get VYB Tokens
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -11,6 +11,50 @@ import { useAccount } from 'wagmi';
 import { postService } from '@/services/api';
 import useAuthStore from '@/store/useAuthStore';
 
+// Example posts to display when API is not available
+const EXAMPLE_POSTS: PostData[] = [
+  {
+    id: '1',
+    avatar: '/placeholder.svg',
+    username: 'Alice Crypto',
+    handle: 'alice',
+    time: '2 hours ago',
+    content: 'Just launched my new NFT collection! Check it out 🚀',
+    likes: 42,
+    comments: 12,
+    shares: 5,
+    reposts: 2,
+    isTokenGated: false
+  },
+  {
+    id: '2',
+    avatar: '/placeholder.svg',
+    username: 'Bob Builder',
+    handle: 'bob',
+    time: '1 day ago',
+    content: 'Excited to announce my upcoming livestream about the future of Web3. Join me tomorrow at 8pm EST!',
+    image: '/placeholder.svg',
+    likes: 124,
+    comments: 34,
+    shares: 15,
+    reposts: 8,
+    isTokenGated: false
+  },
+  {
+    id: '3',
+    avatar: '/placeholder.svg',
+    username: 'Dana Decentralized',
+    handle: 'dana',
+    time: '3 days ago',
+    content: 'Building in the bear market is where the real innovation happens. Working on something special for my token holders. Stay tuned! 🔒',
+    likes: 89,
+    comments: 23,
+    shares: 7,
+    reposts: 4,
+    isTokenGated: true
+  }
+];
+
 const Index: React.FC = () => {
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
   const navigate = useNavigate();
@@ -25,7 +69,8 @@ const Index: React.FC = () => {
       const response = await postService.getFeed();
       return response.data;
     },
-    enabled: isConnected && isOnboarded
+    enabled: isConnected && isOnboarded,
+    retry: false
   });
   
   // Initialize showWelcomeBanner based on onboarding status
@@ -38,13 +83,14 @@ const Index: React.FC = () => {
   // Connect wallet when address is available
   useEffect(() => {
     if (isConnected && address && !isOnboarded) {
+      // Just connect the wallet but don't auto-navigate
       connectWallet(address);
     }
   }, [isConnected, address, isOnboarded, connectWallet]);
   
   const handleStartOnboarding = () => {
     console.log('Navigating to onboarding from Index');
-    navigate('/onboarding', { replace: true });
+    navigate('/onboarding');
   };
   
   return (
@@ -102,10 +148,16 @@ const Index: React.FC = () => {
           <div className="glass-card p-4 text-center">
             <p>Loading posts...</p>
           </div>
-        ) : error ? (
-          <div className="glass-card p-4 text-center">
-            <p>Error loading posts. Please try again later.</p>
-          </div>
+        ) : error || !postsData ? (
+          // When API fails or no data, show example posts
+          <>
+            <div className="glass-card p-4 mb-4 text-center bg-blue-500/10 border border-blue-500/20">
+              <p>Showing example content. Connect your wallet and complete onboarding to see real posts.</p>
+            </div>
+            {EXAMPLE_POSTS.map(post => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </>
         ) : postsData && postsData.posts && postsData.posts.length > 0 ? (
           postsData.posts.map((post: any) => (
             <PostCard 
@@ -127,9 +179,15 @@ const Index: React.FC = () => {
             />
           ))
         ) : (
-          <div className="glass-card p-4 text-center">
-            <p>No posts yet. Be the first to share something!</p>
-          </div>
+          // When API returns empty array, show example posts
+          <>
+            <div className="glass-card p-4 mb-4 text-center bg-blue-500/10 border border-blue-500/20">
+              <p>No posts found. Here are some examples:</p>
+            </div>
+            {EXAMPLE_POSTS.map(post => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </>
         )}
       </div>
     </Layout>

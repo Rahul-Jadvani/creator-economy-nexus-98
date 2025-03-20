@@ -12,18 +12,23 @@ interface WalletConnectSectionProps {
 const WalletConnectSection: React.FC<WalletConnectSectionProps> = ({ onWalletConnected }) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const { address, isConnected } = useAccount();
+  const [hasTriggeredCallback, setHasTriggeredCallback] = useState(false);
   
-  // If wallet is already connected, trigger the callback
+  // Only trigger the callback when the wallet is connected AND the user clicks continue
   useEffect(() => {
-    if (isConnected && address) {
-      console.log('Wallet already connected, triggering callback');
-      // Use a small delay to ensure wallet state is properly updated
-      const timer = setTimeout(() => {
-        onWalletConnected(address);
-      }, 300);
-      return () => clearTimeout(timer);
+    if (isConnected && address && !hasTriggeredCallback) {
+      // Just update the UI to show the connected state, but don't auto-trigger the callback
+      console.log('Wallet is connected, waiting for user to click continue');
     }
-  }, [isConnected, address, onWalletConnected]);
+  }, [isConnected, address, hasTriggeredCallback, onWalletConnected]);
+  
+  const handleContinue = () => {
+    if (isConnected && address) {
+      console.log('User clicked continue, triggering callback');
+      setHasTriggeredCallback(true);
+      onWalletConnected(address);
+    }
+  };
   
   const handleWalletConnect = (walletType: string) => {
     setIsConnecting(true);
@@ -32,12 +37,10 @@ const WalletConnectSection: React.FC<WalletConnectSectionProps> = ({ onWalletCon
     if (!isConnected) {
       setTimeout(() => {
         const mockAddress = '0x' + Math.random().toString(16).substring(2, 14) + '...';
-        onWalletConnected(mockAddress);
         setIsConnecting(false);
+        // Just update UI, don't auto-trigger callback
       }, 1500);
-    } else if (address) {
-      // If already connected, just trigger the callback
-      onWalletConnected(address);
+    } else {
       setIsConnecting(false);
     }
   };
@@ -53,7 +56,7 @@ const WalletConnectSection: React.FC<WalletConnectSectionProps> = ({ onWalletCon
         </p>
         <Button
           className="bg-white text-black hover:bg-white/90"
-          onClick={() => onWalletConnected(address)}
+          onClick={handleContinue}
         >
           Continue <ArrowRight className="h-4 w-4 ml-2" />
         </Button>

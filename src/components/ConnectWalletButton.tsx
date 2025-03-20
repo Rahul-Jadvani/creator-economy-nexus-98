@@ -23,19 +23,24 @@ const ConnectWalletButton: React.FC = () => {
   const { connectWallet, isOnboarded, checkOnboardingStatus } = useAuthStore();
   
   useEffect(() => {
-    // Only navigate to onboarding when user connects their wallet
-    // and hasn't completed onboarding yet
+    // Only check onboarding status when wallet connects, don't auto-navigate
     if (isConnected && address && !location.pathname.includes('/onboarding')) {
       const checkOnboarding = async () => {
-        const hasCompletedOnboarding = await checkOnboardingStatus(address);
-        
-        if (!hasCompletedOnboarding) {
-          // Use a stronger approach to navigation
-          const timer = setTimeout(() => {
-            console.log('Navigating to onboarding from ConnectWalletButton');
-            navigate('/onboarding', { replace: true });
-          }, 200);
-          return () => clearTimeout(timer);
+        try {
+          const hasCompletedOnboarding = await checkOnboardingStatus(address);
+          
+          // Only show a prompt to complete onboarding, don't force navigate
+          if (!hasCompletedOnboarding) {
+            toast.info('Complete onboarding to access all features', {
+              action: {
+                label: 'Go to Onboarding',
+                onClick: () => navigate('/onboarding')
+              },
+              duration: 5000
+            });
+          }
+        } catch (error) {
+          console.error('Error checking onboarding status:', error);
         }
       };
       
@@ -49,7 +54,14 @@ const ConnectWalletButton: React.FC = () => {
       
       if (success) {
         if (!isOnboarded) {
-          navigate('/onboarding', { replace: true });
+          // Show a prompt instead of auto-redirecting
+          toast.success('Wallet connected successfully!', {
+            action: {
+              label: 'Complete Onboarding',
+              onClick: () => navigate('/onboarding', { replace: true })
+            },
+            duration: 5000
+          });
         } else {
           // If already onboarded, stay on current page
           toast.success('Wallet connected successfully!');
