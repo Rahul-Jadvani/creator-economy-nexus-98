@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Bell, Search } from 'lucide-react';
@@ -25,8 +26,10 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <h1 className="text-2xl font-bold text-white text-glow tracking-widest">
-                VYB<span className="text-glow opacity-50">-</span>R8R
+              <h1 className="text-2xl font-bold tracking-widest animate-pulse">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#9b87f5] via-[#D946EF] to-[#F97316] font-orbitron">
+                  VYB<span className="opacity-50">-</span>R8R
+                </span>
               </h1>
             </Link>
           </div>

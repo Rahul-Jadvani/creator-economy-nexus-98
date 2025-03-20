@@ -17,7 +17,7 @@ interface NFTItem {
   timeLeft?: string;
   highestBid?: number;
   likes: number;
-  category: 'art' | 'collectible' | 'music' | 'photography' | 'utility';
+  category: 'art' | 'collectible' | 'music' | 'photography' | 'utility' | 'merch';
   tokenId: string;
 }
 
@@ -25,11 +25,11 @@ const mockNFTs: NFTItem[] = [
   {
     id: '1',
     name: 'Cyber Punk Portrait #238',
-    creator: 'Digital Alchemist',
-    creatorHandle: 'digitalalchemist',
+    creator: 'Aryan Joshi',
+    creatorHandle: 'aryancrypto',
     price: 0.5,
     currency: 'ETH',
-    image: '/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?auto=format&fit=crop&w=800&q=80',
     isAuction: false,
     likes: 45,
     category: 'art',
@@ -42,7 +42,7 @@ const mockNFTs: NFTItem[] = [
     creatorHandle: 'vybplatform',
     price: 1.2,
     currency: 'ETH',
-    image: '/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1634986666676-ec9647d06f81?auto=format&fit=crop&w=800&q=80',
     isAuction: false,
     likes: 120,
     category: 'utility',
@@ -51,11 +51,11 @@ const mockNFTs: NFTItem[] = [
   {
     id: '3',
     name: 'Genesis Beat Collection',
-    creator: 'Audio Creator',
-    creatorHandle: 'audiocreator',
+    creator: 'Vikram Singh',
+    creatorHandle: 'vikrammusic',
     price: 0.8,
     currency: 'ETH',
-    image: '/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
     isAuction: true,
     timeLeft: '5h 23m',
     highestBid: 0.85,
@@ -66,11 +66,11 @@ const mockNFTs: NFTItem[] = [
   {
     id: '4',
     name: 'Ethereal Landscapes #12',
-    creator: 'Vision Artist',
-    creatorHandle: 'visionartist',
+    creator: 'Neha Verma',
+    creatorHandle: 'nehadev',
     price: 0.3,
     currency: 'ETH',
-    image: '/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
     isAuction: false,
     likes: 32,
     category: 'photography',
@@ -78,31 +78,43 @@ const mockNFTs: NFTItem[] = [
   },
   {
     id: '5',
-    name: 'Collector Card Series 1',
-    creator: 'Crypto Collector',
-    creatorHandle: 'cryptocollector',
+    name: 'VYB-R8R Hoodie - Black',
+    creator: 'VYB Merchandise',
+    creatorHandle: 'vybmerch',
     price: 0.15,
     currency: 'ETH',
-    image: '/placeholder.svg',
-    isAuction: true,
-    timeLeft: '2d 6h',
+    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80',
+    isAuction: false,
     highestBid: 0.2,
     likes: 65,
-    category: 'collectible',
+    category: 'merch',
     tokenId: '0x7890...1234'
   },
   {
     id: '6',
     name: 'Future City Blueprint',
-    creator: 'Neo Architect',
-    creatorHandle: 'neoarchitect',
+    creator: 'Rahul Gupta',
+    creatorHandle: 'rahulfinance',
     price: 0.75,
     currency: 'ETH',
-    image: '/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1545231027-637d2f6210f8?auto=format&fit=crop&w=800&q=80',
     isAuction: false,
     likes: 89,
     category: 'art',
     tokenId: '0x2345...6789'
+  },
+  {
+    id: '7',
+    name: 'VYB-R8R Limited T-Shirt',
+    creator: 'VYB Merchandise',
+    creatorHandle: 'vybmerch',
+    price: 0.08,
+    currency: 'ETH',
+    image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=80',
+    isAuction: false,
+    likes: 42,
+    category: 'merch',
+    tokenId: '0x8765...4321'
   }
 ];
 
@@ -201,8 +213,8 @@ const Marketplace: React.FC = () => {
               <TabsTrigger value="music" className="flex items-center gap-1">
                 <span>Music</span>
               </TabsTrigger>
-              <TabsTrigger value="collectibles" className="flex items-center gap-1">
-                <span>Collectibles</span>
+              <TabsTrigger value="merch" className="flex items-center gap-1">
+                <span>Merch</span>
               </TabsTrigger>
               <TabsTrigger value="utility" className="flex items-center gap-1">
                 <span>Utility</span>
@@ -234,9 +246,9 @@ const Marketplace: React.FC = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="collectibles" className="mt-0">
+          <TabsContent value="merch" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockNFTs.filter(nft => nft.category === 'collectible').map(nft => (
+              {mockNFTs.filter(nft => nft.category === 'merch').map(nft => (
                 <NFTCard key={nft.id} nft={nft} />
               ))}
             </div>

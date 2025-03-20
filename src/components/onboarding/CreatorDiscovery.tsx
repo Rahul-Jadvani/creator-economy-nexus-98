@@ -19,65 +19,65 @@ interface CreatorDiscoveryProps {
   onCreatorsFollowed: (creatorIds: string[]) => void;
 }
 
-// Mock creators data
+// Mock creators data with Indian names
 const mockCreators: Creator[] = [
   {
     id: '1',
-    name: 'Alex Rivera',
-    handle: 'alexr',
-    avatar: 'https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=120&q=80',
+    name: 'Vikram Singh',
+    handle: 'vikrammusic',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80',
     category: 'music',
-    tokenSymbol: 'ALEX',
+    tokenSymbol: 'VIKR',
     tokenPrice: 1.92,
     followers: 1248
   },
   {
     id: '2',
-    name: 'Jade Williams',
-    handle: 'jadew',
-    avatar: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=120&q=80',
+    name: 'Meera Patel',
+    handle: 'meeratech',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80',
     category: 'tech',
-    tokenSymbol: 'JADE',
+    tokenSymbol: 'MEER',
     tokenPrice: 3.45,
     followers: 8765
   },
   {
     id: '3',
-    name: 'CryptoArtist',
-    handle: 'cryptoartist',
-    avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=120&q=80',
+    name: 'Aryan Joshi',
+    handle: 'aryancrypto',
+    avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80',
     category: 'art',
-    tokenSymbol: 'CART',
+    tokenSymbol: 'ARYJ',
     tokenPrice: 2.15,
     followers: 3457
   },
   {
     id: '4',
-    name: 'GameDeveloper',
-    handle: 'gamedev',
-    avatar: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=120&q=80',
+    name: 'Neha Verma',
+    handle: 'nehadev',
+    avatar: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80',
     category: 'gaming',
-    tokenSymbol: 'GAME',
+    tokenSymbol: 'NEHA',
     tokenPrice: 1.05,
     followers: 5678
   },
   {
     id: '5',
-    name: 'FinanceGuru',
-    handle: 'finguru',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=120&q=80',
+    name: 'Rahul Gupta',
+    handle: 'rahulfinance',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80',
     category: 'finance',
-    tokenSymbol: 'FGURU',
+    tokenSymbol: 'RGPT',
     tokenPrice: 4.30,
     followers: 12564
   },
   {
     id: '6',
-    name: 'FashionDesigner',
-    handle: 'fashionista',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=120&q=80',
+    name: 'Anjali Desai',
+    handle: 'anjalidesigns',
+    avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&q=80',
     category: 'fashion',
-    tokenSymbol: 'FASH',
+    tokenSymbol: 'ADES',
     tokenPrice: 2.75,
     followers: 7823
   },
