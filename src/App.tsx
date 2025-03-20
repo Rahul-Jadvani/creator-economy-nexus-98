@@ -9,6 +9,9 @@ import Explore from "./pages/Explore";
 import Create from "./pages/Create";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import Tickets from "./pages/Tickets";
+import Marketplace from "./pages/Marketplace";
+import Stake from "./pages/Stake";
 
 const queryClient = new QueryClient();
 
@@ -24,9 +27,9 @@ const App = () => (
           <Route path="/create" element={<Create />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/trending" element={<Explore />} />
-          <Route path="/tickets" element={<NotFound />} />
-          <Route path="/marketplace" element={<NotFound />} />
-          <Route path="/stake" element={<NotFound />} />
+          <Route path="/tickets" element={<Tickets />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/stake" element={<Stake />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
