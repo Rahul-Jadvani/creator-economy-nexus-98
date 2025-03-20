@@ -19,7 +19,8 @@ const Sidebar: React.FC = () => {
   ];
   
   const handleNavigation = (path: string) => {
-    // Use navigate directly instead of onClick handler
+    // Use window.location.href as a fallback if navigate doesn't work
+    console.log('Navigating to:', path);
     navigate(path);
   };
   
@@ -53,7 +54,10 @@ const Sidebar: React.FC = () => {
             <span>Staked: 0.0</span>
             <span>Rewards: 0.0</span>
           </div>
-          <button className="mt-4 w-full glass-button py-2 px-4 text-sm font-medium hover:bg-white/10 transition-all duration-200">
+          <button 
+            className="mt-4 w-full glass-button py-2 px-4 text-sm font-medium hover:bg-white/10 transition-all duration-200"
+            onClick={() => handleNavigation('/stake')}
+          >
             Get VYB Tokens
           </button>
         </div>

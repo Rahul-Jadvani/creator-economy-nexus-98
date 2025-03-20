@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import {
@@ -17,17 +17,20 @@ const ConnectWalletButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { address, isConnected } = useAccount();
   const navigate = useNavigate();
+  const location = useLocation();
   
   useEffect(() => {
     // Navigate to onboarding when user connects their wallet
-    if (isConnected) {
-      // Use a small delay to ensure wallet state is properly updated
+    // But only if they're not already on the onboarding page
+    if (isConnected && !location.pathname.includes('/onboarding')) {
+      // Use a stronger approach to navigation
       const timer = setTimeout(() => {
-        navigate('/onboarding');
-      }, 100);
+        console.log('Navigating to onboarding from ConnectWalletButton');
+        navigate('/onboarding', { replace: true });
+      }, 200);
       return () => clearTimeout(timer);
     }
-  }, [isConnected, navigate]);
+  }, [isConnected, navigate, location.pathname]);
   
   return (
     <>

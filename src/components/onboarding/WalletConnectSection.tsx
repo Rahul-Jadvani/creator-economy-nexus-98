@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Wallet, User, ArrowRight } from 'lucide-react';
+import { Wallet, User, ArrowRight, CheckCircle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAccount } from 'wagmi';
 
@@ -16,10 +16,11 @@ const WalletConnectSection: React.FC<WalletConnectSectionProps> = ({ onWalletCon
   // If wallet is already connected, trigger the callback
   useEffect(() => {
     if (isConnected && address) {
+      console.log('Wallet already connected, triggering callback');
       // Use a small delay to ensure wallet state is properly updated
       const timer = setTimeout(() => {
         onWalletConnected(address);
-      }, 100);
+      }, 200);
       return () => clearTimeout(timer);
     }
   }, [isConnected, address, onWalletConnected]);
@@ -27,13 +28,38 @@ const WalletConnectSection: React.FC<WalletConnectSectionProps> = ({ onWalletCon
   const handleWalletConnect = (walletType: string) => {
     setIsConnecting(true);
     
-    // Simulate wallet connection
-    setTimeout(() => {
-      const mockAddress = '0x' + Math.random().toString(16).substring(2, 14) + '...';
-      onWalletConnected(mockAddress);
+    // Simulate wallet connection if not already connected
+    if (!isConnected) {
+      setTimeout(() => {
+        const mockAddress = '0x' + Math.random().toString(16).substring(2, 14) + '...';
+        onWalletConnected(mockAddress);
+        setIsConnecting(false);
+      }, 1500);
+    } else if (address) {
+      // If already connected, just trigger the callback
+      onWalletConnected(address);
       setIsConnecting(false);
-    }, 1500);
+    }
   };
+  
+  // If wallet is already connected, show connected state
+  if (isConnected && address) {
+    return (
+      <div className="text-center">
+        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+        <h2 className="text-2xl font-orbitron font-bold mb-3">Wallet Connected</h2>
+        <p className="text-gray-400 mb-6">
+          Your wallet ({address.substring(0, 6)}...{address.substring(address.length - 4)}) is connected
+        </p>
+        <Button
+          className="bg-white text-black hover:bg-white/90"
+          onClick={() => onWalletConnected(address)}
+        >
+          Continue <ArrowRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+    );
+  }
   
   return (
     <div>

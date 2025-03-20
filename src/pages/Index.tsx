@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import PostCard, { PostData } from '@/components/PostCard';
 import CreatePostForm from '@/components/CreatePostForm';
 import { Button } from '@/components/ui/button';
 import { Gift, Trophy, ArrowRight, X } from 'lucide-react';
+import { useAccount } from 'wagmi';
 
 const mockedPosts: PostData[] = [
   {
@@ -64,13 +65,24 @@ const mockedPosts: PostData[] = [
 const Index: React.FC = () => {
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isConnected } = useAccount();
   
   // Check if user is new (would be determined by authentication in a real app)
-  const isNewUser = true;
+  const isNewUser = !location.state?.onboardingCompleted;
   
   const handleStartOnboarding = () => {
-    navigate('/onboarding');
+    console.log('Navigating to onboarding from Index');
+    navigate('/onboarding', { replace: true });
   };
+
+  // When a user arrives at home after completing onboarding,
+  // mark that they've completed it to not show the banner again
+  useEffect(() => {
+    if (location.state?.onboardingCompleted) {
+      setShowWelcomeBanner(false);
+    }
+  }, [location.state]);
   
   return (
     <Layout>

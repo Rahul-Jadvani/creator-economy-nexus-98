@@ -63,10 +63,13 @@ const Onboarding: React.FC = () => {
 
   const handleOnboardingComplete = () => {
     toast.success('Onboarding complete! Welcome to VYB-R8R!');
-    // Navigate to home page with a small delay to allow toast to show
+    
+    // Force navigation to home page with a longer delay to ensure toast is shown
+    // and state updates are properly processed
     setTimeout(() => {
-      navigate('/');
-    }, 500);
+      // Use a direct window location change as a fallback if navigate doesn't work
+      window.location.href = '/';
+    }, 800);
   };
 
   const goToNextStep = () => {
@@ -84,6 +87,16 @@ const Onboarding: React.FC = () => {
   const getProgressPercentage = () => {
     return (currentStep / (steps.length - 1)) * 100;
   };
+
+  // If user somehow returns to onboarding after completing it, redirect to home
+  useEffect(() => {
+    if (isConnected && currentStep === 4 && tutorialComplete) {
+      const timer = setTimeout(() => {
+        navigate('/', { replace: true });
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isConnected, currentStep, tutorialComplete, navigate]);
 
   return (
     <Layout>
