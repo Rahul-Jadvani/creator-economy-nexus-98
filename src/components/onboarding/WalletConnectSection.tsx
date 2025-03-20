@@ -1,8 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Wallet, User, ArrowRight } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAccount } from 'wagmi';
 
 interface WalletConnectSectionProps {
   onWalletConnected: (address: string) => void;
@@ -10,6 +11,14 @@ interface WalletConnectSectionProps {
 
 const WalletConnectSection: React.FC<WalletConnectSectionProps> = ({ onWalletConnected }) => {
   const [isConnecting, setIsConnecting] = useState(false);
+  const { address, isConnected } = useAccount();
+  
+  // If wallet is already connected, trigger the callback
+  useEffect(() => {
+    if (isConnected && address) {
+      onWalletConnected(address);
+    }
+  }, [isConnected, address, onWalletConnected]);
   
   const handleWalletConnect = (walletType: string) => {
     setIsConnecting(true);

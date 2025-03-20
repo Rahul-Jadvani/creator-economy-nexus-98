@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Compass, PlusCircle, User, TrendingUp, Ticket, LayoutGrid, Coins } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { icon: Home, label: 'Home', path: '/' },
@@ -17,6 +18,10 @@ const Sidebar: React.FC = () => {
     { icon: Coins, label: 'Stake', path: '/stake' },
   ];
   
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+  
   return (
     <div className="h-[calc(100vh-4rem)] overflow-y-auto glass-card py-4 px-2 m-2">
       <div className="px-3 mb-6">
@@ -24,10 +29,10 @@ const Sidebar: React.FC = () => {
       </div>
       <nav className="space-y-1 px-2">
         {navItems.map((item) => (
-          <Link
+          <div
             key={item.path}
-            to={item.path}
-            className={`flex items-center px-3 py-3 rounded-lg transition-all group ${
+            onClick={() => handleNavigation(item.path)}
+            className={`flex items-center px-3 py-3 rounded-lg transition-all group cursor-pointer ${
               location.pathname === item.path
                 ? 'bg-white/10 text-white border-l-2 border-white'
                 : 'text-gray-300 hover:bg-white/5'
@@ -35,7 +40,7 @@ const Sidebar: React.FC = () => {
           >
             <item.icon className={`h-5 w-5 mr-3 ${location.pathname === item.path ? 'text-white' : 'text-gray-400 group-hover:text-white'}`} />
             <span className="text-sm font-medium">{item.label}</span>
-          </Link>
+          </div>
         ))}
       </nav>
 

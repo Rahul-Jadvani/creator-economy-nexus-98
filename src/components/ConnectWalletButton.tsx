@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,7 @@ const ConnectWalletButton: React.FC = () => {
   const { address, isConnected } = useAccount();
   const navigate = useNavigate();
   
-  React.useEffect(() => {
+  useEffect(() => {
     // Navigate to onboarding when user connects their wallet
     if (isConnected) {
       navigate('/onboarding');
@@ -78,24 +78,8 @@ const ConnectWalletButton: React.FC = () => {
           );
         }}
       </ConnectButton.Custom>
-      
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="glass border-white/10 sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="font-orbitron text-xl text-center mb-2">Connect Wallet</DialogTitle>
-            <DialogDescription className="text-center text-gray-400">
-              Choose a wallet to connect to VYB-R8R
-            </DialogDescription>
-          </DialogHeader>
-          
-          {/* We no longer need this part as Rainbow Kit handles the wallet connection options */}
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
-
-// Add the missing import
-import { useState } from 'react';
 
 export default ConnectWalletButton;

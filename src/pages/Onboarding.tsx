@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAccount } from 'wagmi';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,14 +23,20 @@ const steps = [
 
 const Onboarding: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [walletConnected, setWalletConnected] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [followedCreators, setFollowedCreators] = useState<string[]>([]);
   const [tutorialComplete, setTutorialComplete] = useState(false);
   const navigate = useNavigate();
+  const { isConnected } = useAccount();
+
+  // Skip the wallet connect step if the wallet is already connected
+  useEffect(() => {
+    if (isConnected && currentStep === 0) {
+      setCurrentStep(1);
+    }
+  }, [isConnected, currentStep]);
 
   const handleWalletConnected = (address: string) => {
-    setWalletConnected(true);
     toast.success('Wallet connected successfully!');
     toast.success('You received a Soulbound Token (SBT) as your digital identity!');
     toast.success('Airdrop: 50 VYB tokens added to your wallet!');
@@ -56,6 +63,7 @@ const Onboarding: React.FC = () => {
 
   const handleOnboardingComplete = () => {
     toast.success('Onboarding complete! Welcome to VYB-R8R!');
+    // Navigate to home page
     navigate('/');
   };
 
