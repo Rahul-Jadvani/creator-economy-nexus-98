@@ -16,42 +16,57 @@ import Tickets from "./pages/Tickets";
 import Marketplace from "./pages/Marketplace";
 import Stake from "./pages/Stake";
 import Onboarding from "./pages/Onboarding";
+import { useEffect } from "react";
+import useAuthStore from "./store/useAuthStore";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: 1
+      retry: 1,
+      staleTime: 1000 * 60 * 5, // 5 minutes
     },
   },
 });
 
-const App = () => (
-  <WagmiConfig config={wagmiConfig}>
-    <QueryClientProvider client={queryClient}>
-      <RainbowKitProvider chains={chains}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/explore" element={<Explore />} />
-              <Route path="/create" element={<Create />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/trending" element={<Explore />} />
-              <Route path="/tickets" element={<Tickets />} />
-              <Route path="/marketplace" element={<Marketplace />} />
-              <Route path="/stake" element={<Stake />} />
-              <Route path="/onboarding" element={<Onboarding />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </RainbowKitProvider>
-    </QueryClientProvider>
-  </WagmiConfig>
-);
+const App = () => {
+  const { isAuthenticated, fetchUser } = useAuthStore();
+
+  // Fetch user data if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUser();
+    }
+  }, [isAuthenticated, fetchUser]);
+
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider chains={chains}>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/create" element={<Create />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/:handle" element={<Profile />} />
+                <Route path="/trending" element={<Explore />} />
+                <Route path="/tickets" element={<Tickets />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/stake" element={<Stake />} />
+                <Route path="/onboarding" element={<Onboarding />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiConfig>
+  );
+};
 
 export default App;

@@ -11,12 +11,18 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from 'sonner';
+import { postService } from '@/services/api';
+import useAuthStore from '@/store/useAuthStore';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CreatePostForm: React.FC = () => {
   const [content, setContent] = useState('');
   const [isTokenGated, setIsTokenGated] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuthStore();
+  const queryClient = useQueryClient();
   
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
@@ -43,24 +49,43 @@ const CreatePostForm: React.FC = () => {
     setSelectedImage(null);
   };
   
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!content.trim() && !selectedImage) {
       toast.error('Please add some content to your post');
       return;
     }
     
-    // Simulate post submission
-    toast.success('Post created successfully!');
-    setContent('');
-    setSelectedImage(null);
-    setIsTokenGated(false);
+    setIsSubmitting(true);
+    
+    try {
+      await postService.createPost({
+        content,
+        image: selectedImage || undefined,
+        isTokenGated
+      });
+      
+      // Reset form
+      setContent('');
+      setSelectedImage(null);
+      setIsTokenGated(false);
+      
+      // Invalidate feed query to refresh posts
+      queryClient.invalidateQueries({ queryKey: ['feed'] });
+      
+      toast.success('Post created successfully!');
+    } catch (error) {
+      console.error('Error creating post:', error);
+      toast.error('Failed to create post');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
     <div className="glass-card p-4 mb-6">
       <div className="flex space-x-3">
         <Avatar className="h-10 w-10 border border-white/20">
-          <img src="/placeholder.svg" alt="Your avatar" />
+          <img src={user?.avatar || "/placeholder.svg"} alt="Your avatar" />
         </Avatar>
         
         <div className="flex-1">
@@ -140,10 +165,10 @@ const CreatePostForm: React.FC = () => {
             <Button 
               size="sm" 
               onClick={handleSubmit}
-              disabled={(!content.trim() && !selectedImage) || isUploading}
-              className={`bg-white text-black hover:bg-white/90 ${(!content.trim() && !selectedImage) || isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={(!content.trim() && !selectedImage) || isUploading || isSubmitting}
+              className={`bg-white text-black hover:bg-white/90 ${(!content.trim() && !selectedImage) || isUploading || isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Post
+              {isSubmitting ? 'Posting...' : 'Post'}
             </Button>
           </div>
         </div>

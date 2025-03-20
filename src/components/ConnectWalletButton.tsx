@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
+import { toast } from 'sonner';
+import useAuthStore from '@/store/useAuthStore';
 import {
   Dialog,
   DialogContent,
@@ -18,21 +20,46 @@ const ConnectWalletButton: React.FC = () => {
   const { address, isConnected } = useAccount();
   const navigate = useNavigate();
   const location = useLocation();
+  const { connectWallet, isOnboarded, checkOnboardingStatus } = useAuthStore();
   
   useEffect(() => {
     // Only navigate to onboarding when user connects their wallet
     // and hasn't completed onboarding yet
-    const hasCompletedOnboarding = localStorage.getItem('onboardingCompleted') === 'true';
-    
-    if (isConnected && !location.pathname.includes('/onboarding') && !hasCompletedOnboarding) {
-      // Use a stronger approach to navigation
-      const timer = setTimeout(() => {
-        console.log('Navigating to onboarding from ConnectWalletButton');
-        navigate('/onboarding', { replace: true });
-      }, 200);
-      return () => clearTimeout(timer);
+    if (isConnected && address && !location.pathname.includes('/onboarding')) {
+      const checkOnboarding = async () => {
+        const hasCompletedOnboarding = await checkOnboardingStatus(address);
+        
+        if (!hasCompletedOnboarding) {
+          // Use a stronger approach to navigation
+          const timer = setTimeout(() => {
+            console.log('Navigating to onboarding from ConnectWalletButton');
+            navigate('/onboarding', { replace: true });
+          }, 200);
+          return () => clearTimeout(timer);
+        }
+      };
+      
+      checkOnboarding();
     }
-  }, [isConnected, navigate, location.pathname]);
+  }, [isConnected, address, navigate, location.pathname, checkOnboardingStatus]);
+  
+  const handleWalletConnect = async (walletAddress: string) => {
+    try {
+      const success = await connectWallet(walletAddress);
+      
+      if (success) {
+        if (!isOnboarded) {
+          navigate('/onboarding', { replace: true });
+        } else {
+          // If already onboarded, stay on current page
+          toast.success('Wallet connected successfully!');
+        }
+      }
+    } catch (error) {
+      console.error('Wallet connection error:', error);
+      toast.error('Failed to connect wallet');
+    }
+  };
   
   return (
     <>
@@ -65,7 +92,9 @@ const ConnectWalletButton: React.FC = () => {
                     <Button 
                       variant="default" 
                       className="bg-white text-black hover:bg-white/90 text-xs font-medium"
-                      onClick={openConnectModal}
+                      onClick={() => {
+                        openConnectModal();
+                      }}
                     >
                       Connect Wallet
                     </Button>
@@ -76,7 +105,12 @@ const ConnectWalletButton: React.FC = () => {
                   <Button 
                     variant="outline" 
                     className="border-white/20 text-white font-medium flex items-center gap-2 hover:bg-white/10"
-                    onClick={openAccountModal}
+                    onClick={() => {
+                      if (account && account.address) {
+                        handleWalletConnect(account.address);
+                      }
+                      openAccountModal();
+                    }}
                   >
                     <Wallet className="h-4 w-4" />
                     <span className="text-xs">{account.displayName}</span>
